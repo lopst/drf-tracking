@@ -26,7 +26,8 @@ class Migration(migrations.Migration):
                 ('query_params', models.TextField(db_index=True)),
                 ('data', models.TextField(null=True, blank=True)),
                 ('response', models.TextField(null=True, blank=True)),
-                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                #('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_id', models.IntegerField(blank=True, null=True)),
             ],
         ),
     ]
