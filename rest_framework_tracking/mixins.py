@@ -50,7 +50,10 @@ class LoggingMixin(object):
         response_ms = int(response_timedelta.total_seconds() * 1000)
 
         # save to log
-        self.request.log.response = response.rendered_content
+        try:
+            self.request.log.response = response.rendered_content
+        except:
+            pass
         self.request.log.status_code = response.status_code
         self.request.log.response_ms = response_ms
         self.request.log.save()
