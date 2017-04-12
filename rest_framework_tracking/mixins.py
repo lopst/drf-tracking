@@ -51,7 +51,7 @@ class LoggingMixin(object):
 
         # save to log
         try:
-            self.request.log.response = response.rendered_content
+            self.request.log.response = response.rendered_content.encode('utf-8')
         except:
             pass
         self.request.log.status_code = response.status_code
