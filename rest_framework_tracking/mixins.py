@@ -36,7 +36,7 @@ class LoggingMixin(object):
 
         # add user to log after auth
         user = request.user
-        if user.is_anonymous():
+        if user.is_anonymous:
             user = None
         self.request.log.user = user
         self.request.log.save()

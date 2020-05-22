@@ -39,7 +39,7 @@ class CrossForeignKey(ForeignKey):
 class BaseAPIRequestLog(models.Model):
     """Logs API requests by time, user, etc"""
     # user or None for anon
-    user = CrossForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
+    user = CrossForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE)
 
     # timestamp of request
     requested_at = models.DateTimeField(db_index=True)
