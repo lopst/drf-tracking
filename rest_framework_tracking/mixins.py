@@ -6,11 +6,7 @@ class LoggingMixin(object):
     """Mixin to log requests"""
     def initial(self, request, *args, **kwargs):
         """Set current time on request"""
-        # get data dict
-        try:
-            data_dict = request.data.dict()
-        except AttributeError:  # if already a dict, can't dictify
-            data_dict = request.data
+
 
         # get IP
         ipaddr = request.META.get("HTTP_X_FORWARDED_FOR", None)
@@ -28,7 +24,6 @@ class LoggingMixin(object):
             host=request.get_host(),
             method=request.method,
             query_params=request.query_params.dict(),
-            data=data_dict,
         )
 
         # regular intitial, including auth check
@@ -39,7 +34,18 @@ class LoggingMixin(object):
         if user.is_anonymous:
             user = None
         self.request.log.user = user
-        self.request.log.save()
+
+        # get data dict
+        try:
+            # Accessing request.data *for the first time* parses the request body, which may raise
+            # ParseError and UnsupportedMediaType exceptions. It's important not to swallow these,
+            # as (depending on implementation details) they may only get raised this once, and
+            # DRF logic needs them to be raised by the view for error handling to work correctly.
+            self.request.log.data = self.request.data.dict()
+        except AttributeError:  # if already a dict, can't dictify
+            self.request.log.data = self.request.data
+        finally:
+            self.request.log.save()
 
     def finalize_response(self, request, response, *args, **kwargs):
         # regular finalize response
